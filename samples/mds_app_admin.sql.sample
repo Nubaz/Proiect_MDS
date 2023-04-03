@@ -1,0 +1,6 @@
+DROP USER IF EXISTS 'username'@'domain'; 
+
+CREATE USER 'username'@'domain'
+  IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER;
+
+GRANT ALL PRIVILEGES ON database TO 'username'@'domain';

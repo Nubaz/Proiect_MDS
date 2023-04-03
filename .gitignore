@@ -109,6 +109,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+MDS_Venv
 
 # Spyder project settings
 .spyderproject
@@ -127,3 +128,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# sql
+mds_app_admin.sql
