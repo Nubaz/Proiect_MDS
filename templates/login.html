@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ro">
+    <head>
+        <meta charset="utf-8">
+        <title>Logare</title>
+    </head>
+    <body>
+        <form action="{{ url_for('login') }}" method="post">
+            <label>
+                Username
+                <input type="text" id="username" name="username" placeholder="Username" required>
+            </label>
+            <label>
+                Parolă
+                <input type="password" id="parola" name="parola" placeholder="Parolă" required>
+            </label>
+            <div>{{ error_msg }}</div>
+            <input type="submit" value="Logare">
+        </form>
+    </body>
+</html>
