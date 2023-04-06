@@ -6,7 +6,7 @@ import os, enum
 
 load_dotenv(find_dotenv())
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__)
 app.secret_key = os.getenv('APP_SECRET')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI')
@@ -27,6 +27,13 @@ class User(db.Model):
     parola = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.Enum(Roles))
 
+@app.route('/')
+def dashboard():
+    if 'loggedIn' in session:
+        return render_template('user.html')
+    else:
+        return redirect(url_for('login'))
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     error_msg = ''
@@ -44,7 +51,7 @@ def login():
             session['id'] = user['id']
             session['username'] = user['username']
 
-            return 'Logare cu succes!'
+            return render_template('user.html', user=user)
         else:
             error_msg = 'Date de logare incorecte!'
 

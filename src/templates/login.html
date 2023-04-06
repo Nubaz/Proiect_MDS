@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ro">
+    <head>
+        {% include "head.html" %}
+        
+        <title>Logare</title>
+        <link rel="stylesheet" href="../static/login.css">
+
+        <script>
+            window.addEventListener("DOMContentLoaded", () => {
+                let loggin_error = document.getElementById("login-error")
+
+                if(loggin_error.innerText) {
+                    setTimeout(() => {
+                        loggin_error.style.display = 'none'
+                    }, 4000)
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <div class="login-box">
+            <h1>Bine ați venit!</h1>
+            <hr>
+            <form action="{{ url_for('login') }}" method="post" class="login-form">
+                <label for="username"><i class="fa-solid fa-user"></i></label>
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <label for="parola"><i class="fa-solid fa-key"></i></label>
+                <input type="password" id="parola" name="parola" placeholder="Parolă" required>
+                <input type="submit" value="Logare">
+            </form>
+            <div id="login-error">{{ error_msg }}</div>
+        </div>
+    </body>
+</html>
