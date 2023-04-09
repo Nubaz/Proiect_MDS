@@ -27,10 +27,16 @@ class User(db.Model):
     parola = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.Enum(Roles))
 
+user = {}
+
 @app.route('/')
 def dashboard():
     if 'loggedIn' in session:
-        return render_template('user.html')
+        if session['rol'] == 'angajat':
+            return render_template('angajat.html', user=user)
+        else:
+            return render_template('manager.html', user=user)
+
     else:
         return redirect(url_for('login'))
 
@@ -50,8 +56,12 @@ def login():
             session['loggedIn'] = True
             session['id'] = user['id']
             session['username'] = user['username']
+            session['rol'] = user['rol'].value[0]
 
-            return render_template('user.html', user=user)
+            if session['rol'] == 'angajat':
+                return render_template('angajat.html', user=user)
+            else:
+                return render_template('manager.html', user=user)
         else:
             error_msg = 'Date de logare incorecte!'
 
