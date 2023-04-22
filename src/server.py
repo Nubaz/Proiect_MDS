@@ -27,24 +27,48 @@ class User(db.Model):
     parola = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.Enum(Roles))
 
-user = {}
+class Pontaj(db.Model):
+    __tablename__ = 'pontaj'
 
-@app.route('/')
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_ang = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    data_add = db.Column(db.DateTime, server_default="CURRENT_DATE")
+    nume_pr = db.Column(db.String(50), nullable=False)
+    descr_tasks = db.Column(db.Text)
+    nr_ore = db.Column(db.Integer, nullable=False)
+    aprobat = db.Column(db.Boolean, nullable=False, server_default="false")
+
+user = {}
+pontaje = {}
+
+@app.route('/', methods=['GET', 'POST'])
 def dashboard():
+    global user
+
+    if request.method == 'POST' and 'nume-proiect' in request.form and 'descriere-tasks' in request.form and 'nr-ore' in request.form:
+        pontaj = Pontaj(id_ang=session['id'], nume_pr=request.form['nume-proiect'], descr_tasks=request.form['descriere-tasks'], nr_ore=request.form['nr-ore'])
+        db.session.add(pontaj)
+        db.session.commit()
+
     if 'loggedIn' in session:
         if session['rol'] == 'angajat':
-            return render_template('angajat.html', user=user)
+            return render_template('angajat.html', user=user, pontaje=pontaje)
         else:
-            return render_template('manager.html', user=user)
+            return render_template('manager.html', user=user, pontaje=pontaje)
 
     else:
         return redirect(url_for('login'))
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    global user, pontaje
     error_msg = ''
 
+    if(user):
+        return redirect(url_for('dashboard')) 
+
     if request.method == 'POST' and 'username' in request.form and 'parola' in request.form:
+        print(request.form)
         username = request.form['username']
         parola = request.form['parola']
 
@@ -58,10 +82,20 @@ def login():
             session['username'] = user['username']
             session['rol'] = user['rol'].value[0]
 
+            with app.app_context():
+                if(session['rol'] == 'angajat'):
+                    pontaje = Pontaj.query.filter_by(id_ang=session['id']).all()
+                else:
+                    pontaje = Pontaj.query.all()
+
+                if(pontaje):
+                    pontaje = [p.__dict__ for p in pontaje]
+                    [p.pop('_sa_instance_state') for p in pontaje]
+
             if session['rol'] == 'angajat':
-                return render_template('angajat.html', user=user)
+                return redirect(url_for('dashboard'))
             else:
-                return render_template('manager.html', user=user)
+                return redirect(url_for('dashboard'))
         else:
             error_msg = 'Date de logare incorecte!'
 
@@ -69,8 +103,15 @@ def login():
 
 @app.route('/logout')
 def logout():
+    global user
+
     session.pop('loggedIn', None)
     session.pop('id', None)
     session.pop('username', None)
+    user = {}
 
     return redirect(url_for('login'))
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html')

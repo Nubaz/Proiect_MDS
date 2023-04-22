@@ -2,7 +2,67 @@
 <html lang="ro">
     <head>
         {% include "fragments/head.html" %}
+        <link rel="stylesheet" href="../static/css/angajat.css">
 
         <title>Angajat </title>
     </head>
+    <body class="m-4">
+        <div class="modal fade text-white" id="adauga">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form action="{{ url_for('dashboard') }}" method="post">
+                            <div>
+                                <label for="nume-proiect" class="fw-bold">Nume proiect</label>
+                                <input type="text" class="form-control" id="nume-proiect" name="nume-proiect" placeholder="Proiect">
+                                <div class="form-text text-white" id="helper-nume-proiect">Numele proiectului la care lucrați</div>
+                            </div>
+                            <br><div>
+                                <label for="descriere-tasks" class="fw-bold">Descrierea task-ului/task-urilor</label>
+                                <input type="text" class="form-control" id="descriere-tasks"  name="descriere-tasks" placeholder="Task-uri...">
+                                <div class="form-text text-white" id="helper-descriere-tasks">Descrierea task-ului/task-urilor la care ați lucrat în cadrul proiectului</div>
+                            </div>
+                            <br><div>
+                                <label for="nr-ore" class="fw-bold">Nr. ore</label>
+                                <input type="number" min="1" class="form-control" id="nr-ore" name="nr-ore">
+                                <div class="form-text text-white" id="helper-nr-ore">Numărul de ore lucrate</div>
+                            </div>
+                            <br><div class="modal-footer px-0 pb-0">
+                                <button type="button" data-bs-dismiss="modal" class="red-btn">Închide</button>
+                                <button type="submit">Adaugă pontajul</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <h1 class="text-center fw-bold text-decoration-underline">Dashboard {{ user.nume }} {{ user.prenume }}</h1>
+        <h2 class="fw-bold text-decoration-underline">Pontaje neaprobate</h2>
+        <table class="table table-dark">
+            <thead class="fw-bold">
+                <th>ID</th>
+                <th>Data adăugării</th>
+                <th>Nume proiect</th>
+                <th>Descriere task-uri</th>
+                <th>Nr. ore</th>
+                <th>Aprobat</th>
+            </thead>
+            <tbody>
+                {% for pontaj in pontaje %}
+                    <tr>
+                        <td>{{ pontaj.id }}</td>
+                        <td>{{ pontaj.data_add }}</td>
+                        <td>{{ pontaj.nume_pr }}</td>
+                        <td>{{ pontaj.descr_tasks }}</td>
+                        <td>{{ pontaj.nr_ore }}</td>
+                        <td>{{ pontaj.aprobat }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br><h2 class="fw-bold text-decoration-underline">Pontaje aprobate</h2>
+        <br><button type="button" data-bs-toggle="modal" data-bs-target="#adauga">Adaugă pontaj</button>
+        <button type="button" class="red-btn"><a href="/logout">Delogare</a></button>
+    </body>
 </html>
