@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
+import babel.dates
 
 import os, enum
 
@@ -41,14 +42,35 @@ class Pontaj(db.Model):
 user = {}
 pontaje = {}
 
+def getPontaje():
+    global pontaje
+
+    with app.app_context():
+        if session['rol'] == 'angajat':
+            pontaje = Pontaj.query.filter_by(id_ang=session['id']).all()
+        else:
+            pontaje = Pontaj.query.all()
+
+        if pontaje:
+            for p in pontaje:
+                p = p.__dict__
+                p.pop('_sa_instance_state')
+                print(p)
+
+@app.template_filter('formatdate')
+def format_datetime(value):
+    return babel.dates.format_datetime(value, "EEEE, d MMM y, H:mm:s", locale='ro')
+
 @app.route('/', methods=['GET', 'POST'])
 def dashboard():
-    global user
+    global user, pontaje
 
     if request.method == 'POST' and 'nume-proiect' in request.form and 'descriere-tasks' in request.form and 'nr-ore' in request.form:
         pontaj = Pontaj(id_ang=session['id'], nume_pr=request.form['nume-proiect'], descr_tasks=request.form['descriere-tasks'], nr_ore=request.form['nr-ore'])
         db.session.add(pontaj)
         db.session.commit()
+
+        getPontaje()
 
     if 'loggedIn' in session:
         if session['rol'] == 'angajat':
@@ -61,7 +83,7 @@ def dashboard():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    global user, pontaje
+    global user
     error_msg = ''
 
     if(user):
@@ -82,15 +104,7 @@ def login():
             session['username'] = user['username']
             session['rol'] = user['rol'].value[0]
 
-            with app.app_context():
-                if(session['rol'] == 'angajat'):
-                    pontaje = Pontaj.query.filter_by(id_ang=session['id']).all()
-                else:
-                    pontaje = Pontaj.query.all()
-
-                if(pontaje):
-                    pontaje = [p.__dict__ for p in pontaje]
-                    [p.pop('_sa_instance_state') for p in pontaje]
+            getPontaje()
 
             if session['rol'] == 'angajat':
                 return redirect(url_for('dashboard'))
