@@ -1,0 +1,16 @@
+html {
+    font-family: 'Catamaran', sans-serif;
+}
+
+body {
+    background-color: rgb(126, 126, 196);
+
+    a {
+        text-decoration: underline;
+        color: #7FC46A;
+
+        &:hover {
+            color: #C4A391;
+        }
+    }
+}

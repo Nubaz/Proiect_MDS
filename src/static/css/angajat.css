@@ -1,4 +1,3 @@
-@import url(https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css);
 html {
   font-family: "Catamaran", sans-serif;
 }
@@ -10,10 +9,12 @@ button {
   border: 2px solid black;
   background-color: rgb(48, 111, 153);
   font-weight: 500;
+  color: white;
 }
 button:hover {
   background-color: rgb(21, 151, 238);
-  transition: background-color 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  color: black;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 body {
@@ -30,18 +31,14 @@ body {
 
 .red-btn {
   background-color: rgb(145, 48, 48);
+  color: white;
 }
 .red-btn:hover {
   background-color: rgb(221, 49, 49);
-  transition: background-color 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  color: black;
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
 }
 .red-btn a {
   text-decoration: none;
   color: inherit;
-}
-
-input[type=number] {
-  -webkit-appearance: textfield;
-     -moz-appearance: textfield;
-          appearance: textfield;
 }
