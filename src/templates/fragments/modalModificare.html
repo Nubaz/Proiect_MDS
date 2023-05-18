@@ -1,0 +1,28 @@
+<div class="modal fade text-white" id="modifica">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="{{ url_for('dashboard') }}" method="post">
+                    <input type="text" id="id-p-mod" name="id-p-mod" hidden>
+                    <div>
+                        <label for="nume-proiect-mod" class="fw-bold">Nume proiect</label>
+                        <input type="text" class="form-control" id="nume-proiect-mod" name="nume-proiect-mod" placeholder="Proiect" required>
+                    </div>
+                    <br><div>
+                        <label for="descriere-tasks-mod" class="fw-bold">Descrierea task-ului/task-urilor</label>
+                        <input type="text" class="form-control" id="descriere-tasks-mod" name="descriere-tasks-mod" placeholder="Task-uri..." required>
+                    </div>
+                    <br><div>
+                        <label for="nr-ore-mod" class="fw-bold">Nr. ore</label>
+                        <input type="number" min="1" class="form-control" id="nr-ore-mod" name="nr-ore-mod" placeholder="##" required>
+                    </div>
+                    <br><div class="text-center"><i class="fa-solid fa-triangle-exclamation"></i> Odată cu modificarea pontajului se va modifica și data adăugării sale la data curentă.</div>
+                    <br><div class="modal-footer px-0 pb-0">
+                        <button type="button" data-bs-dismiss="modal" class="red-btn"><i class="fa-solid fa-circle-xmark"></i> Închide</button>
+                        <button type="submit"><i class="fa-solid fa-pen"></i> Modifică pontajul</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

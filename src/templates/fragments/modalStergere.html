@@ -1,27 +1,30 @@
-<div class="modal fade text-white" id="stergere">
+<div class="modal fade text-white" id="sterge">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
-                <form action="{{ url_for('dashboard') }}" method="post">
-                    <div>
-                        <label for="nume-proiect" class="fw-bold">Nume proiect</label>
-                        <input type="text" class="form-control" id="nume-proiect" name="nume-proiect" placeholder="Proiect" required>
-                        <div class="form-text text-white" id="helper-nume-proiect">Numele proiectului la care lucrați</div>
-                    </div>
-                    <br><div>
-                        <label for="descriere-tasks" class="fw-bold">Descrierea task-ului/task-urilor</label>
-                        <input type="text" class="form-control" id="descriere-tasks" name="descriere-tasks" placeholder="Task-uri..." required>
-                        <div class="form-text text-white" id="helper-descriere-tasks">Descrierea task-ului/task-urilor la care ați lucrat în cadrul proiectului</div>
-                    </div>
-                    <br><div>
-                        <label for="nr-ore" class="fw-bold">Nr. ore</label>
-                        <input type="number" min="1" class="form-control" id="nr-ore" name="nr-ore" placeholder="##" required>
-                        <div class="form-text text-white" id="helper-nr-ore">Numărul de ore lucrate</div>
-                    </div>
-                    <br><div class="modal-footer px-0 pb-0">
-                        <button type="button" data-bs-dismiss="modal" class="red-btn">Închide</button>
-                        <button type="submit">Adaugă pontajul</button>
-                    </div>
+                <p class="fw-bold d-inline-block">Confirmați ștergerea pontajului?</p>
+                <table>
+                    <tbody id="p-sters">
+                        <tr>
+                            <td class="fw-bold">ID:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Data adăugării:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Numele proiectului:</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="red-btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Nu</button>
+                <form method="post" action="{{ url_for('dashboard') }}">
+                    <input type="text" id="id-p-sters" name="id-p-sters" hidden>
+                    <button type="submit"><i class="fa-solid fa-check"></i> Da</button>
                 </form>
             </div>
         </div>

@@ -10,6 +10,7 @@ button {
     background-color: rgb(48, 111, 153);
     font-weight: 500;
     color: white;
+    transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
 
     &:hover {
         background-color: rgb(21, 151, 238);
@@ -33,6 +34,7 @@ body {
 .red-btn {
     background-color: rgb(145, 48, 48);
     color: white;
+    transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
 
     &:hover {
         background-color: rgb(221, 49, 49);
@@ -44,4 +46,8 @@ body {
         text-decoration: none;
         color: inherit;
     }
+}
+
+#p-sters > tr > td {
+    padding-right: 1em;
 }

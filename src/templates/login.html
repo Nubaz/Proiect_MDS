@@ -11,8 +11,12 @@
                 let loggin_error = document.getElementById("login-error")
 
                 if(loggin_error.innerText) {
+                    loggin_error.style.transition = "opacity 0.5s linear";
                     setTimeout(() => {
-                        loggin_error.style.display = 'none'
+                        loggin_error.style.opacity = 0;
+                        setTimeout(() => {
+                            loggin_error.style.display = "none";
+                        }, 700)
                     }, 4000)
                 }
             })
@@ -27,9 +31,9 @@
                 <input type="text" id="username" name="username" placeholder="Username" required>
                 <label for="parola"><i class="fa-solid fa-key"></i></label>
                 <input type="password" id="parola" name="parola" placeholder="Parolă" required>
-                <input type="submit" value="Logare">
+                <button type="submit"><i class="fa-solid fa-user"></i> Logare</button>
             </form>
-            <div id="login-error">{{ error_msg }}</div>
+            <div id="login-error" class="fw-bold">{{ error_msg }}</div>
         </div>
     </body>
 </html>
