@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime
+from passlib.hash import sha256_crypt
 import babel.dates
 
 import os, enum
@@ -128,7 +129,7 @@ def login():
 
     if (request.method == "POST" and "username" in request.form and "parola" in request.form):
         username = request.form["username"]
-        parola = request.form["parola"]
+        parola = sha256_crypt.hash(secret=request.form["parola"], salt=os.getenv("SALT"))
 
         with app.app_context():
             user = User.query.filter_by(username=username, parola=parola).all()
