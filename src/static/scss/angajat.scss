@@ -1,0 +1,53 @@
+html {
+    font-family: 'Catamaran', sans-serif;
+}
+
+button {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 10px;
+    border: 2px solid black;
+    background-color: rgb(48, 111, 153);
+    font-weight: 500;
+    color: white;
+    transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+
+    &:hover {
+        background-color: rgb(21, 151, 238);
+        color: black;
+        transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+}
+
+body {
+    background-color: rgb(126, 126, 196);
+}
+
+.modal-content {
+    background-color: rgb(38, 38, 48);
+}
+
+.modal-dialog {
+    transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1) !important;
+}
+
+.red-btn {
+    background-color: rgb(145, 48, 48);
+    color: white;
+    transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+
+    &:hover {
+        background-color: rgb(221, 49, 49);
+        color: black;
+        transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+#p-sters > tr > td {
+    padding-right: 1em;
+}

@@ -2,7 +2,77 @@
 <html lang="ro">
     <head>
         {% include "fragments/head.html" %}
+        <link rel="stylesheet" href="../static/css/angajat.css">
+        <script src="../static/js/test.js"></script>
 
-        <title>Angajat </title>
-    </head>
+        <title>Angajat</title>
+    </head> 
+    <body class="m-4">
+        {% include "fragments/modalPontaj.html" %}
+        {% include "fragments/modalStergere.html" %}
+        {% include "fragments/modalModificare.html" %}
+
+        <h1 class="text-center fw-bold text-decoration-underline">Dashboard {{ user.nume }} {{ user.prenume }}</h1>
+        <h2 class="fw-bold text-decoration-underline">Pontaje neaprobate</h2>
+        <table class="table table-dark text-center">
+            <thead class="fw-bold">
+                <th>ID</th>
+                <th>Data adăugării</th>
+                <th>Nume proiect</th>
+                <th>Descriere task-uri</th>
+                <th>Nr. ore</th>
+                <th>Aprobat</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% for pontaj in pontaje %}
+                    {% if not pontaj.aprobat %}
+                        <tr id="pontaj-{{pontaj.id}}">
+                            <td>{{ pontaj.id }}</td>
+                            <td>{{ pontaj.data_add|formatdate }}</td>
+                            <td>{{ pontaj.nume_pr }}</td>
+                            <td>{{ pontaj.descr_tasks }}</td>
+                            <td>{{ pontaj.nr_ore }}</td>
+                            <td style="color: red" class="fw-bold">Nu</td>
+                            <td class="text-center d-flex flex-row">
+                                <button id={{pontaj.id}} class="red-btn w-50" data-bs-toggle="modal" data-bs-target="#sterge" onclick="getPontaj(this.id)"><i class="fa-solid fa-trash"></i> Șterge</button>
+                                <button id={{pontaj.id}} class="w-50" data-bs-toggle="modal" data-bs-target="#modifica" onclick="getPontaj(this.id)"><i class="fa-solid fa-pen"></i> Modifică</button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <br><h2 class="fw-bold text-decoration-underline">Pontaje aprobate</h2>
+        <table class="table table-dark text-center">
+            <thead class="fw-bold">
+                <th>ID</th>
+                <th>Data adăugării</th>
+                <th>Nume proiect</th>
+                <th>Descriere task-uri</th>
+                <th>Nr. ore</th>
+                <th>Aprobat</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% for pontaj in pontaje %}
+                    {% if pontaj.aprobat %}
+                        <tr>
+                            <td>{{ pontaj.id }}</td>
+                            <td>{{ pontaj.data_add|formatdate }}</td>
+                            <td>{{ pontaj.nume_pr }}</td>
+                            <td>{{ pontaj.descr_tasks }}</td>
+                            <td>{{ pontaj.nr_ore }}</td>
+                            <td style="color: green" class="fw-bold">Da</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <div class="d-flex d-row gap-2 justify-content-center">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#adauga"><i class="fa-solid fa-file-lines"></i> Adaugă pontaj</button>
+            <button type="button" class="red-btn"><a href="/logout"><i class="fa-solid fa-user-slash"></i> Delogare</a></button>
+        </div>
+    </body>
 </html>

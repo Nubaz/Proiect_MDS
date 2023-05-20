@@ -1,0 +1,32 @@
+<div class="modal fade text-white" id="sterge">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p class="fw-bold d-inline-block">Confirmați ștergerea pontajului?</p>
+                <table>
+                    <tbody id="p-sters">
+                        <tr>
+                            <td class="fw-bold">ID:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Data adăugării:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Numele proiectului:</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="red-btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> Nu</button>
+                <form method="post" action="{{ url_for('dashboard') }}">
+                    <input type="text" id="id-p-sters" name="id-p-sters" hidden>
+                    <button type="submit"><i class="fa-solid fa-check"></i> Da</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
