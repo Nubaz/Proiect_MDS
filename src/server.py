@@ -53,18 +53,20 @@ pontaje = {}
 
 
 def getPontaje():
-    global pontaje
+    global pontaje, pontajeSiAngajati
 
     with app.app_context():
         if session["rol"] == "angajat":
             pontaje = Pontaj.query.filter_by(id_ang=session["id"]).all()
         else:
-            pontaje = Pontaj.query.all()
-
+            pontaje = db.session.query(User, Pontaj).join(Pontaj).filter(User.id == Pontaj.id_ang).all()
+            return 
+           
         if pontaje:
             for p in pontaje:
                 p = p.__dict__
                 p.pop("_sa_instance_state")
+
 
 
 @app.template_filter("formatdate")
@@ -75,6 +77,16 @@ def format_datetime(value):
 @app.route("/", methods=["GET", "POST"])
 def dashboard():
     global user, pontaje
+
+    if request.method == "POST"and "pontaj-id" in request.form:
+        pontaj_id = request.form["pontaj-id"]
+        pontaj = Pontaj.query.filter_by(id=pontaj_id).first()
+
+        if pontaj:
+            pontaj.aprobat = True
+            db.session.commit()
+
+            getPontaje()
 
     if (request.method == "POST" and "nume-proiect" in request.form and "descriere-tasks" in request.form and "nr-ore" in request.form):
         pontaj = Pontaj(
