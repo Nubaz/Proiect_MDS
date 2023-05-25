@@ -1,0 +1,26 @@
+@use 'general';
+
+#main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+
+#buttons {
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    border-right: 4px solid black;
+    padding-right: 1em;
+}
+
+#users-scroll {
+    padding-left: 1em;
+}
+
+ol {
+    list-style-type: disc;
+}

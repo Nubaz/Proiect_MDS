@@ -36,15 +36,3 @@ button:hover {
   text-decoration: none;
   color: inherit;
 }
-
-.modal-content {
-  background-color: rgb(38, 38, 48);
-}
-
-.modal-dialog {
-  transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1) !important;
-}
-
-#p-sters > tr > td {
-  padding-right: 1em;
-}

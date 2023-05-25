@@ -11,7 +11,7 @@ CREATE TABLE `user` (
     `username` VARCHAR(50) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
     `parola` VARCHAR(255) NOT NULL,
-    `rol` ENUM('angajat', 'manager'),
+    `rol` ENUM('angajat', 'manager', 'admin'),
     PRIMARY KEY (`id`)
 );
 

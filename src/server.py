@@ -1,57 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv, find_dotenv
+from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
 from passlib.hash import sha256_crypt
+
+from dbModels import *
+from app import *
+
 import babel.dates
-
-import os, enum
-
-load_dotenv(find_dotenv())
-
-app = Flask(__name__)
-app.secret_key = os.getenv("APP_SECRET")
-
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DB_URI")
-db = SQLAlchemy(app)
-
-
-class Roles(enum.Enum):
-    angajat = ("angajat",)
-    manager = "manager"
-
-
-class User(db.Model):
-    __tablename__ = "user"
-
-    id = db.Column(db.Integer, primary_key=True)
-    nume = db.Column(db.String(30), nullable=False)
-    prenume = db.Column(db.String(30), nullable=False)
-    username = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    parola = db.Column(db.String(255), nullable=False)
-    rol = db.Column(db.Enum(Roles))
-
-
-class Pontaj(db.Model):
-    __tablename__ = "pontaj"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_ang = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    data_add = db.Column(db.DateTime, server_default="CURRENT_DATE")
-    nume_pr = db.Column(db.String(50), nullable=False)
-    descr_tasks = db.Column(db.Text)
-    nr_ore = db.Column(db.Integer, nullable=False)
-    aprobat = db.Column(db.Boolean, nullable=False, server_default="false")
-
-    def __repr__(self):
-        return str(self.id) + " " + str(self.id_ang) + " " + str(self.data_add) + " " + str(self.nume_pr) + " " + str(self.descr_tasks)
-
+import os
 
 user = {}
 pontaje = {}
 
-
+# Functie de preluare a pontajelor
+# pe baza rolului utilizatorului
 def getPontaje():
     global pontaje, pontajeSiAngajati
 
@@ -67,18 +28,18 @@ def getPontaje():
                 p = p.__dict__
                 p.pop("_sa_instance_state")
 
-
-
+# Functie de formatare a datei calendaristice
 @app.template_filter("formatdate")
 def format_datetime(value):
     return babel.dates.format_datetime(value, "EEEE, d MMM y, H:mm:s", locale="ro")
 
-
+# Ruta principala
 @app.route("/", methods=["GET", "POST"])
 def dashboard():
     global user, pontaje
 
-    if request.method == "POST"and "pontaj-id" in request.form:
+    # Operatia de aprobare a unui pontaj din BD
+    if request.method == "POST" and "pontaj-id" in request.form:
         pontaj_id = request.form["pontaj-id"]
         pontaj = Pontaj.query.filter_by(id=pontaj_id).first()
 
@@ -88,7 +49,8 @@ def dashboard():
 
             getPontaje()
 
-    if (request.method == "POST" and "nume-proiect" in request.form and "descriere-tasks" in request.form and "nr-ore" in request.form):
+    # Operatia de ADAUGARE a unui pontaj in BD
+    if request.method == "POST" and "nume-proiect" in request.form and "descriere-tasks" in request.form and "nr-ore" in request.form:
         pontaj = Pontaj(
             id_ang=session["id"],
             nume_pr=request.form["nume-proiect"],
@@ -100,7 +62,8 @@ def dashboard():
 
         getPontaje()
 
-    if (request.method == "POST" and "id-p-sters" in request.form):
+    # Operatia de STERGERE a unui pontaj din BD
+    if request.method == "POST" and "id-p-sters" in request.form:
         pontaj = Pontaj.query.filter_by(id=request.form["id-p-sters"]).one()
 
         db.session.delete(pontaj)
@@ -108,7 +71,8 @@ def dashboard():
 
         getPontaje()
 
-    if (request.method == "POST" and "nume-proiect-mod" in request.form):
+    # Operatia de MODIFICARE a unui pontaj din BD
+    if request.method == "POST" and "nume-proiect-mod" in request.form:
         pontaj = Pontaj.query.filter_by(id=request.form["id-p-mod"]).one()
         print(pontaj)
         pontaj.nume_pr = request.form["nume-proiect-mod"]
@@ -121,16 +85,29 @@ def dashboard():
 
         getPontaje()
 
+    if request.method == "POST" and "u-nume" in request.form:
+        pass
+
+    with app.app_context():
+        users = db.session.query(User).all()
+        roluri = [rol.value[0].upper()+rol.value[1:] for rol in Roles]
+
+    # Afisarea dashboard-ului in functie de
+    # tipul utilizatorului
     if "loggedIn" in session:
         if session["rol"] == "angajat":
             return render_template("angajat.html", user=user, pontaje=pontaje)
-        else:
+        elif session["rol"] == "manager":
             return render_template("manager.html", user=user, pontaje=pontaje)
+        else:
+            return render_template("admin.html", users=users, roluri=roluri)
 
+    # Redirectarea la pagina de logare
+    # in caz ca nu exista niciun utilizator logat
     else:
         return redirect(url_for("login"))
 
-
+# Ruta pentru pagina de logare
 @app.route("/login", methods=["GET", "POST"])
 def login():
     global user
@@ -139,7 +116,7 @@ def login():
     if user:
         return redirect(url_for("dashboard"))
 
-    if (request.method == "POST" and "username" in request.form and "parola" in request.form):
+    if request.method == "POST" and "username" in request.form and "parola" in request.form:
         username = request.form["username"]
         parola = sha256_crypt.hash(secret=request.form["parola"], salt=os.getenv("SALT"))
 
@@ -164,7 +141,7 @@ def login():
 
     return render_template("login.html", error_msg=error_msg)
 
-
+# Ruta pentru delogare
 @app.route("/logout")
 def logout():
     global user
@@ -176,7 +153,10 @@ def logout():
 
     return redirect(url_for("login"))
 
-
+# Ruta pentru eroarea HTTP 404
 @app.errorhandler(404)
 def not_found(e):
-    return render_template("404.html")
+    if "logged_in" in session:
+        return render_template("404.html")
+    else:
+        return redirect(url_for("login"))
