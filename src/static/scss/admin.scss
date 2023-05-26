@@ -7,7 +7,7 @@
     height: 70vh;
 }
 
-#buttons {
+.buttons {
     display: flex;
     justify-content: center;
 }
@@ -19,8 +19,4 @@ form {
 
 #users-scroll {
     padding-left: 1em;
-}
-
-ol {
-    list-style-type: disc;
 }

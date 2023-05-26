@@ -11,13 +11,16 @@ class Roles(enum.Enum):
 class User(db.Model):
     __tablename__ = "user"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nume = db.Column(db.String(30), nullable=False)
     prenume = db.Column(db.String(30), nullable=False)
     username = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     parola = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.Enum(Roles))
+
+    def __repr__(self):
+        return str(self.id) + " " + str(self.nume) + " " + str(self.prenume) + " " + str(self.username) + " " + str(self.email) + " " + str(self.parola) + " " + str(self.rol)
 
 # Clasa pontajului unui angajat din baza de date
 class Pontaj(db.Model):

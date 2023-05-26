@@ -74,19 +74,41 @@ def dashboard():
     # Operatia de MODIFICARE a unui pontaj din BD
     if request.method == "POST" and "nume-proiect-mod" in request.form:
         pontaj = Pontaj.query.filter_by(id=request.form["id-p-mod"]).one()
-        print(pontaj)
         pontaj.nume_pr = request.form["nume-proiect-mod"]
         pontaj.descr_tasks = request.form["descriere-tasks-mod"]
         pontaj.nr_ore = request.form["nr-ore-mod"]
         pontaj.data_add = datetime.today()
 
-        print(pontaj)
         db.session.commit()
 
         getPontaje()
 
+    # Operatia de ADAUGARE a unui utilizator in BD
     if request.method == "POST" and "u-nume" in request.form:
-        pass
+        user = User(
+            nume = request.form["u-nume"],
+            prenume = request.form["u-prenume"],
+            username = request.form["u-username"],
+            email = request.form["u-email"],
+            parola = sha256_crypt.hash(secret=request.form["u-parola"], salt=os.getenv("SALT")),
+            rol = Roles[request.form["u-rol"][0].lower() + request.form["u-rol"][1:]],   
+        )
+
+        db.session.add(user)
+        db.session.commit()
+
+        users = db.session.query(User).all()
+
+    # Operatia de STERGERE a utilizatorilor
+    if request.method == "POST" and "u-to-delete" in request.form:
+        deleted = request.form.getlist('u-to-delete')
+
+        for toDelete in deleted:
+            user = User.query.filter_by(username=toDelete).one()
+            db.session.delete(user)
+            db.session.commit()
+
+        users = db.session.query(User).all()
 
     with app.app_context():
         users = db.session.query(User).all()
@@ -97,9 +119,9 @@ def dashboard():
     if "loggedIn" in session:
         if session["rol"] == "angajat":
             return render_template("angajat.html", user=user, pontaje=pontaje)
-        elif session["rol"] == "manager":
+        if session["rol"] == "manager":
             return render_template("manager.html", user=user, pontaje=pontaje)
-        else:
+        if session["rol"] == "admin":
             return render_template("admin.html", users=users, roluri=roluri)
 
     # Redirectarea la pagina de logare
@@ -121,21 +143,17 @@ def login():
         parola = sha256_crypt.hash(secret=request.form["parola"], salt=os.getenv("SALT"))
 
         with app.app_context():
-            user = User.query.filter_by(username=username, parola=parola).all()
+            user = (User.query.filter_by(username=username, parola=parola).all())[0]
 
         if user:
-            user = [u.__dict__ for u in user][0]
             session["loggedIn"] = True
-            session["id"] = user["id"]
-            session["username"] = user["username"]
-            session["rol"] = user["rol"].value[0]
+            session["id"] = user.id
+            session["username"] = user.username
+            session["rol"] = user.rol.name
 
             getPontaje()
 
-            if session["rol"] == "angajat":
-                return redirect(url_for("dashboard"))
-            else:
-                return redirect(url_for("dashboard"))
+            return redirect(url_for("dashboard"))
         else:
             error_msg = "Date de logare incorecte!"
 

@@ -9,7 +9,7 @@
     <body>
         <h1 class="text-center fw-bold text-decoration-underline">Dashboard admin</h1>
         <div id="main">
-            <form>
+            <form action="{{ url_for('dashboard') }}" method="POST">
                 <h2 class="fw-bold text-decoration-underline">Adăugare utilizator</h2>
                 <div class="form-group">
                     <label for="u-nume" class="fw-bold">Nume</label>
@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group">
                     <label for="u-email" class="fw-bold">Email</label>
-                    <input type="email" class="form-control" id="u-prenume" name="u-prenume" placeholder="Email" required>
+                    <input type="email" class="form-control" id="u-email" name="u-email" placeholder="Email" required>
                 </div>
                 <div class="form-group">
                     <label for="u-parola" class="fw-bold">Parola</label>
@@ -33,9 +33,9 @@
                 </div>
                 <div class="form-group">
                     <label for="u-rol" class="fw-bold">Rol</label>
-                    <select class="form-select">
+                    <select class="form-select" id="u-rol" name="u-rol">
                         {% for rol in roluri %}
-                            <option>{{rol}}</option>
+                            <option value="{{ rol }}">{{ rol }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -45,14 +45,19 @@
             </form>
             <div id="users-scroll">
                 <h2 class="fw-bold text-decoration-underline">Listă utilizatori</h2>
-                <ol>
-                    {% for u in users %}
-                        <li>{{ u.username }}, {{ u.nume }} {{ u.prenume }}, {{ u.rol }}</li>
-                    {% endfor %}
-                </ol>
+                <form action="{{ url_for('dashboard') }}" method="POST">
+                    <select id="u-to-delete" name="u-to-delete" class="form-select h-100" multiple>
+                        {% for u in users %}
+                            <option value="{{ u.username }}">{{ u.username }}, {{ u.nume }} {{ u.prenume }}, {{ u.rol }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="buttons">
+                        <button type="submit" class="red-btn mt-2"><i class="fa-solid fa-delete-left"></i> Șterge utilizatorul</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div id="buttons">
+        <div class="buttons">
             <button type="button" class="red-btn d-flex justify-content-center"><a href="/logout"><i class="fa-solid fa-user-slash"></i> Delogare</a></button>
         </div>
     </body>
