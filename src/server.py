@@ -5,7 +5,33 @@ from datetime import datetime
 from passlib.hash import sha256_crypt
 import babel.dates
 
+from azure.communication.email import EmailClient
+
+
 import os, enum
+
+def send_approval_email(angajat_email, angajat_nume):
+    connection_string = ""
+    client = EmailClient.from_connection_string(connection_string)
+    message = {
+    "content": {
+        "subject": "Pontaj acceptat",
+        "plainText": "Managerul a aprobat un pontaj de-al tau.",
+        "html": "<html><h1>Managerul a aprobat un pontaj de-al tau.</h1></html>"
+    },
+    "recipients": {
+        "to": [
+            {
+                "address": angajat_email,
+                "displayName": angajat_nume
+            }
+        ]
+    },
+    "senderAddress": "DoNotReply@570d83fc-9db4-41d3-b929-21d2b589c84c.azurecomm.net"
+}
+    response = client.begin_send(message)
+    print(response)
+
 
 load_dotenv(find_dotenv())
 
@@ -53,7 +79,7 @@ pontaje = {}
 
 
 def getPontaje():
-    global pontaje, pontajeSiAngajati
+    global pontaje
 
     with app.app_context():
         if session["rol"] == "angajat":
@@ -66,8 +92,6 @@ def getPontaje():
             for p in pontaje:
                 p = p.__dict__
                 p.pop("_sa_instance_state")
-
-
 
 @app.template_filter("formatdate")
 def format_datetime(value):
@@ -85,6 +109,12 @@ def dashboard():
         if pontaj:
             pontaj.aprobat = True
             db.session.commit()
+
+            angajat = User.query.get(pontaj.id_ang)
+            angajat_email = angajat.email
+            angajat_nume = angajat.nume + angajat.prenume
+            
+            send_approval_email(angajat_email, angajat_nume)
 
             getPontaje()
 
