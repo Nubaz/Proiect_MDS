@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ro">
+    <head>
+        {% include "fragments/head.html" %}
+        <link rel="stylesheet" href="../static/css/admin.css">
+
+        <title>Admin</title>
+    </head>
+    <body>
+        <h1 class="text-center fw-bold text-decoration-underline">Dashboard admin</h1>
+        <div id="main">
+            <form action="{{ url_for('dashboard') }}" method="POST">
+                <h2 class="fw-bold text-decoration-underline">Adăugare utilizator</h2>
+                <div class="form-group">
+                    <label for="u-nume" class="fw-bold">Nume</label>
+                    <input type="text" class="form-control" id="u-nume" name="u-nume" placeholder="Nume" required>
+                </div>
+                <div class="form-group">
+                    <label for="u-prenume" class="fw-bold">Prenume</label>
+                    <input type="text" class="form-control" id="u-prenume" name="u-prenume" placeholder="Prenume" required>
+                </div>
+                <div class="form-group">
+                    <label for="u-username" class="fw-bold">Username</label>
+                    <input type="text" class="form-control" id="u-username" name="u-username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label for="u-email" class="fw-bold">Email</label>
+                    <input type="email" class="form-control" id="u-email" name="u-email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="u-parola" class="fw-bold">Parola</label>
+                    <input type="password" class="form-control" id="u-parola" name="u-parola" placeholder="Parola" required>
+                </div>
+                <div class="form-group">
+                    <label for="u-rol" class="fw-bold">Rol</label>
+                    <select class="form-select" id="u-rol" name="u-rol">
+                        {% for rol in roluri %}
+                            <option value="{{ rol }}">{{ rol }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-flex mt-3 justify-content-center">
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Adaugă</button>
+                </div>
+            </form>
+            <div id="users-scroll">
+                <h2 class="fw-bold text-decoration-underline">Listă utilizatori</h2>
+                <form action="{{ url_for('dashboard') }}" method="POST">
+                    <select id="u-to-delete" name="u-to-delete" class="form-select h-100" multiple>
+                        {% for u in users %}
+                            <option value="{{ u.username }}">{{ u.username }}, {{ u.nume }} {{ u.prenume }}, {{ u.rol }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="buttons">
+                        <button type="submit" class="red-btn mt-2"><i class="fa-solid fa-delete-left"></i> Șterge utilizatorul</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="buttons">
+            <button type="button" class="red-btn d-flex justify-content-center"><a href="/logout"><i class="fa-solid fa-user-slash"></i> Delogare</a></button>
+        </div>
+    </body>
+</html>

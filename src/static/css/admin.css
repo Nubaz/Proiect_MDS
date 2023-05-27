@@ -37,14 +37,23 @@ button:hover {
   color: inherit;
 }
 
-.modal-content {
-  background-color: rgb(38, 38, 48);
+#main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
 }
 
-.modal-dialog {
-  transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1) !important;
+.buttons {
+  display: flex;
+  justify-content: center;
 }
 
-#p-sters > tr > td {
+form {
+  border-right: 4px solid black;
   padding-right: 1em;
+}
+
+#users-scroll {
+  padding-left: 1em;
 }
