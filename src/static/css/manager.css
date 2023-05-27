@@ -34,3 +34,14 @@ tr:nth-child(even) {
     border-radius: 5px;
     cursor: pointer;
 }
+
+.table-container {
+    height: 50vh;
+    overflow: auto;
+}
+
+.mt-3{
+    font-weight: bold
+}
+
+

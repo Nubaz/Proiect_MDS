@@ -12,60 +12,101 @@
         {% include "fragments/modalAcceptaPontaj.html" %}
         <div class="container-fluid">
             <h1 class="mt-3 text-center">Dashboard Manager: {{ user.nume }} {{ user.prenume }}</h1>
+            <br>
             <h2 class="mt-3">Pontaje noi</h2>
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Nume si prenume angajat</th>
-                        <th>Data adăugării</th>
-                        <th>Nume proiect</th>
-                        <th>Descriere task-uri</th>
-                        <th>Nr. ore</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pontaj in pontaje %}
-                    {% if not pontaj[1].aprobat %}
-                    <tr id="pontaj-{{pontaj[1].id}}">
-                        <td>{{ pontaj[0].nume }} {{ pontaj[0].prenume }}</td>
-                        <td>{{ pontaj[1].data_add|formatdate }}</td>
-                        <td>{{ pontaj[1].nume_pr }}</td>
-                        <td>{{ pontaj[1].descr_tasks }}</td>
-                        <td>{{ pontaj[1].nr_ore }}</td>
-                        <td class="text-center d-flex flex-row">
-                            <button id="{{pontaj[1].id}}" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#accepta" onclick="getPontaj(this.id)"><i class="fa-solid fa-check"></i> Aproba</button>
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-            <h2 class="mt-5">Pontaje verificate</h2>
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Nume si prenume angajat</th>
-                        <th>Data adăugării</th>
-                        <th>Nume proiect</th>
-                        <th>Descriere task-uri</th>
-                        <th>Nr. ore</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pontaj in pontaje %}
-                    {% if pontaj[1].aprobat %}
-                    <tr>
-                        <td>{{ pontaj[0].nume }} {{ pontaj[0].prenume }}</td>
-                        <td>{{ pontaj[1].data_add|formatdate }}</td>
-                        <td>{{ pontaj[1].nume_pr }}</td>
-                        <td>{{ pontaj[1].descr_tasks }}</td>
-                        <td>{{ pontaj[1].nr_ore }}</td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
+            <input type="text" id="filter-nume-1" placeholder="Filtrare după nume">
+            <input type="text" id="filter-proiect-1" placeholder="Filtrare după nume proiect">
+            <input type="text" id="filter-tasks-1" placeholder="Filtrare după descriere task-uri">
+            <br>
+            <div id="table1-container" class="table-container">
+                <table id="t1" class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nume si prenume angajat</th>
+                            <th>Data adăugării</th>
+                            <th>Nume proiect</th>
+                            <th>Descriere task-uri</th>
+                            <th>Nr. ore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pontaj in pontaje %}
+                        {% if not pontaj[1].aprobat %}
+                        <tr id="pontaj-{{pontaj[1].id}}">
+                            <td>{{ pontaj[0].nume }} {{ pontaj[0].prenume }}</td>
+                            <td>{{ pontaj[1].data_add|formatdate }}</td>
+                            <td>{{ pontaj[1].nume_pr }}</td>
+                            <td>{{ pontaj[1].descr_tasks }}</td>
+                            <td>{{ pontaj[1].nr_ore }}</td>
+                            <td class="text-center d-flex flex-row">
+                                <button id="{{pontaj[1].id}}" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#accepta" onclick="getPontaj(this.id)"><i class="fa-solid fa-check"></i> Aproba</button>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <h2 class="mt-3">Pontaje verificate</h2>
+            <input type="text" id="filter-nume-2" placeholder="Filtrare după nume">
+            <input type="text" id="filter-proiect-2" placeholder="Filtrare după nume proiect">
+            <input type="text" id="filter-tasks-2" placeholder="Filtrare după descriere task-uri">
+            <br>
+            <div id="table1-container" class="table-container">
+                <table id="t2" class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nume si prenume angajat</th>
+                            <th>Data adăugării</th>
+                            <th>Nume proiect</th>
+                            <th>Descriere task-uri</th>
+                            <th>Nr. ore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pontaj in pontaje %}
+                        {% if pontaj[1].aprobat %}
+                        <tr>
+                            <td>{{ pontaj[0].nume }} {{ pontaj[0].prenume }}</td>
+                            <td>{{ pontaj[1].data_add|formatdate }}</td>
+                            <td>{{ pontaj[1].nume_pr }}</td>
+                            <td>{{ pontaj[1].descr_tasks }}</td>
+                            <td>{{ pontaj[1].nr_ore }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-       
+        <div class="d-flex d-row gap-2 justify-content-center">
+            <button type="button" class="red-btn"><a href="/logout"><i class="fa-solid fa-user-slash"></i> Delogare</a></button>
+        </div>
+        <br>
+        <script>
+            document.getElementById('filter-nume-1').addEventListener('input', function() {
+                filterTable('t1', '1');
+            });
+
+            document.getElementById('filter-proiect-1').addEventListener('input', function() {
+                filterTable('t1', '1');
+            });
+
+            document.getElementById('filter-tasks-1').addEventListener('input', function() {
+                filterTable('t1', '1');
+            });
+
+            document.getElementById('filter-nume-2').addEventListener('input', function() {
+                filterTable('t2', '2');
+            });
+
+            document.getElementById('filter-proiect-2').addEventListener('input', function() {
+                filterTable('t2', '2');
+            });
+
+            document.getElementById('filter-tasks-2').addEventListener('input', function() {
+                filterTable('t2', '2');
+            });
+        </script>
     </body>
 </html>

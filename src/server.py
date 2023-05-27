@@ -14,7 +14,7 @@ pontaje = {}
 # Functie de preluare a pontajelor
 # pe baza rolului utilizatorului
 def getPontaje():
-    global pontaje, pontajeSiAngajati
+    global pontaje
 
     with app.app_context():
         if session["rol"] == "angajat":
@@ -46,6 +46,12 @@ def dashboard():
         if pontaj:
             pontaj.aprobat = True
             db.session.commit()
+
+            angajat = User.query.get(pontaj.id_ang)
+            angajat_email = angajat.email
+            angajat_nume = angajat.nume + angajat.prenume
+            
+            send_approval_email(angajat_email, angajat_nume)
 
             getPontaje()
 
