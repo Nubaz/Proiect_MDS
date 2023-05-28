@@ -128,9 +128,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# sql
-mds_app_admin.sql
-
-# py
-hasher.py

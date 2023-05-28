@@ -1,12 +1,38 @@
 from flask import render_template, request, redirect, url_for, session
 from datetime import datetime
 from passlib.hash import sha256_crypt
+from azure.communication.email import EmailClient
 
 from dbModels import *
 from app import *
 
 import babel.dates
 import os
+
+def send_approval_email(angajat_email, angajat_nume):
+    connection_string = ""
+    try:
+        client = EmailClient.from_connection_string(connection_string)
+        message = {
+            "content": {
+                "subject": "Pontaj acceptat",
+                "plainText": "Managerul a aprobat un pontaj de-al dumneavoastră.",
+                "html": "<html><h1>Managerul a aprobat un pontaj de-al dumneavoastră.</h1></html>"
+            },
+            "recipients": {
+                "to": [
+                    {
+                        "address": angajat_email,
+                        "displayName": angajat_nume
+                    }
+                ]
+            },
+            "senderAddress": "DoNotReply@570d83fc-9db4-41d3-b929-21d2b589c84c.azurecomm.net"
+        }
+        response = client.begin_send(message)
+        print(response)
+    except Exception:
+        print("Something went wrong with the email service")
 
 user = {}
 pontaje = {}

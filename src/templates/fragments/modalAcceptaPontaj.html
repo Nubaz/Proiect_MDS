@@ -1,6 +1,6 @@
-<div class="modal fade text-black" id="accepta">
+<div class="modal fade text-white" id="accepta">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="color: #000; background-color: #fff;">
+        <div class="modal-content">
             <div class="modal-body">
                 <form action="{{ url_for('dashboard') }}" method="post">
                     <div>
@@ -11,21 +11,18 @@
                         <label for="nume-proiect" class="fw-bold">Nume proiect</label>
                         <p id="nume-proiect" name="nume-proiect">
                     </div>
-                    <br>
                     <div>
                         <label for="descriere-tasks" class="fw-bold">Descrierea task-ului/task-urilor</label>
                         <p id="descriere-tasks" name="descriere-tasks"></p>
                     </div>
-                    <br>
                     <div>
                         <label for="nr-ore" class="fw-bold">Nr. ore</label>
                         <p id="nr-ore" name="nr-ore"></p>
                     </div>
-                    <br>
                     <input type="hidden" id="pontaj-id" name="pontaj-id" value="">
                     <div class="modal-footer px-0 pb-0">
                         <button type="button" class="red-btn" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i> Închide</button>
-                        <button type="submit" onclick="attachPontajId()"><i class="fa-solid fa-pen"></i>Aproba pontajul</button>
+                        <button type="submit" onclick="attachPontajId()"><i class="fa-solid fa-pen"></i> Aprobă pontajul</button>
                     </div>
                 </form>
             </div>
