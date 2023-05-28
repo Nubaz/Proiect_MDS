@@ -154,7 +154,7 @@ def dashboard():
         if session["rol"] == "manager":
             return render_template("manager.html", user=user, pontaje=pontaje)
         if session["rol"] == "admin":
-            return render_template("admin.html", users=users, roluri=roluri)
+            return render_template("admin.html", user=user, users=users, roluri=roluri)
 
     # Redirectarea la pagina de logare
     # in caz ca nu exista niciun utilizator logat
@@ -175,7 +175,9 @@ def login():
         parola = sha256_crypt.hash(secret=request.form["parola"], salt=os.getenv("SALT"))
 
         with app.app_context():
-            user = (User.query.filter_by(username=username, parola=parola).all())[0]
+            user = User.query.filter_by(username=username, parola=parola).all()
+            if len(user):
+                user = user[0]
 
         if user:
             session["loggedIn"] = True

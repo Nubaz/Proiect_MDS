@@ -9,7 +9,7 @@
     <body>
         <h1 class="text-center fw-bold text-decoration-underline">Dashboard admin</h1>
         <div id="main">
-            <form action="{{ url_for('dashboard') }}" method="POST">
+            <form id="add-form" action="{{ url_for('dashboard') }}" method="POST">
                 <h2 class="fw-bold text-decoration-underline">Adăugare utilizator</h2>
                 <div class="form-group">
                     <label for="u-nume" class="fw-bold">Nume</label>
@@ -48,7 +48,11 @@
                 <form action="{{ url_for('dashboard') }}" method="POST">
                     <select id="u-to-delete" name="u-to-delete" class="form-select h-100" multiple>
                         {% for u in users %}
-                            <option value="{{ u.username }}">{{ u.username }}, {{ u.nume }} {{ u.prenume }}, {{ u.rol }}</option>
+                            {% if u.username == user.username %}
+                                <option disabled value="{{ u.username }}">{{ u.username }}, {{ u.nume }} {{ u.prenume }}, {{ u.rol }}</option>
+                            {% else %}
+                                <option value="{{ u.username }}">{{ u.username }}, {{ u.nume }} {{ u.prenume }}, {{ u.rol }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                     <div class="buttons">

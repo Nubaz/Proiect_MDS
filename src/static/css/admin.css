@@ -49,7 +49,7 @@ button:hover {
   justify-content: center;
 }
 
-form {
+#add-form {
   border-right: 4px solid black;
   padding-right: 1em;
 }
